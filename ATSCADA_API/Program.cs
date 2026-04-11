@@ -71,6 +71,8 @@ builder.Services.AddHostedService<ClearQueueService>();
 builder.Services.AddHostedService<QueueSpeechCleanupService>(); //Clear queue speech
 builder.Services.AddHostedService<ZNSZaloBackgroundService>();
 builder.Services.AddHostedService<LedSyncService>();
+// Đăng ký LedSyncService để inject vào Controller
+builder.Services.AddSingleton<LedSyncService>();
 builder.Services.AddSingleton<TicketPrinterService>();
 //DI Container
 
@@ -138,6 +140,7 @@ app.UseRouting();
 // Map API controllers and SignalR hubs directly
 app.MapControllers();
 app.MapHub<QueueHub>("/queueHub");
+app.MapHub<LedHub>("/ledHub");
 
 app.MapFallbackToFile("index.html");
 

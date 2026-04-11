@@ -5,6 +5,8 @@ using ATSCADA_Library.Helpers.Pagination;
 using ATSCADA_Library.Interfaces.Server;
 using ATSCADA_Library.Repositories;
 using ATSCADA_Library.Services.ApiService;
+using ATSCADA_Library.Services.ApiService.Interfaces;
+using ATSCADA_Library.Services.BackgroundServices;
 using Humanizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +18,24 @@ namespace ATSCADA_API.Controllers
     [ApiController]
     public class QueueController : ControllerBase
     {
-        //private readonly QueueService _queueService;
         private readonly IQueueRepository _queueRepository;
         private readonly CounterService _counterService;
-        private readonly IHubContext<QueueHub> _hubContext; // Inject SignalR Hub Context
-        public QueueController(IQueueRepository queueRepository, CounterService counterService, IHubContext<QueueHub> hubContext)
+        private readonly IHubContext<QueueHub> _hubContext;
+        private readonly LedSyncService _ledSyncService;
+        private readonly IModbusService _modbusService;
+
+        public QueueController(
+            IQueueRepository queueRepository, 
+            CounterService counterService, 
+            IHubContext<QueueHub> hubContext,
+            LedSyncService ledSyncService,
+            IModbusService modbusService)
         {
             _queueRepository = queueRepository;
             _counterService = counterService;
             _hubContext = hubContext;
+            _ledSyncService = ledSyncService;
+            _modbusService = modbusService;
         }
 
 
@@ -171,14 +182,25 @@ namespace ATSCADA_API.Controllers
         {
             var result = await _counterService.CallNextTicketAtomicAsync(counterId, request.ServiceId);
 
-            if (result == null)
+            if (result.Queue == null || result.Counter == null)
                 return Ok(new { Success = false, Message = "Không còn khách chờ" });
+
+            // Tính toán giá trị LED từ Code và OrderNumber
+            var ledValue = ushort.Parse(result.Counter.Code + result.Queue.OrderNumber.ToString("D3"));
+
+            // Gửi tín hiệu ngay lập tức qua Channel thay vì chờ poll
+            await _ledSyncService.TriggerLedUpdateAsync(result.Counter.ModbusId, ledValue);
+
+            // Notify SignalR clients về việc có queue mới
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage");
 
             return Ok(new
             {
                 Success = true,
-                Client = result,  // Trả thẳng Queue
-                CurrentNumber = result.OrderNumber
+                Queue = result.Queue,
+                Counter = result.Counter,
+                CurrentNumber = result.Queue.OrderNumber,
+                LedValue = ledValue
             });
         }
         //Update 

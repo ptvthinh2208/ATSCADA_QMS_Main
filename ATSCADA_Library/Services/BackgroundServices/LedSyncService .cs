@@ -28,6 +28,13 @@ namespace ATSCADA_Library.Services.BackgroundServices
             });
         }
 
+        // Phương thức public để nhận tín hiệu từ API (khi Call Next)
+        public async Task TriggerLedUpdateAsync(int modbusId, ushort value)
+        {
+            await _updateChannel.Writer.WriteAsync(new LedUpdateRequest(modbusId, value));
+            _logger.LogInformation($"[TRIGGER] Đã gửi lệnh LED: {value} tới Modbus {modbusId}");
+        }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var pollTask = PollDatabaseForChangesAsync(stoppingToken);

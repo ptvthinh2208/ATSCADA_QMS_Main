@@ -22,6 +22,6 @@ namespace ATSCADA_Library.Interfaces.Server
         Task<Counter> CheckNameCounter(CounterDto counterDto);
         Task<Counter> UpdateAsync(Counter counter);
         Task<Counter> CreateNewCounterAsync(CounterDto dto);
-        Task<Queue> CallNextTicketAtomicAsync(int counterId, int serviceId);
+        Task<CallNextResult> CallNextTicketAtomicAsync(int counterId, int serviceId);
     }
 }

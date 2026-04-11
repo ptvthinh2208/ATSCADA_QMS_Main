@@ -144,9 +144,9 @@ namespace ATSCADA_Library.Services.ApiService
         {
             return await _counterRepository.CreateNewCounterAsync(dto);
         }
-        public async Task<Queue> CallNextTicketAtomicAsync(int counterId, int serviceId)
+        public async Task<CallNextResult> CallNextTicketAtomicAsync(int counterId, int serviceId)
         {
-            return await _counterRepository.CallNextTicketAtomicAsync(counterId,serviceId);
+            return await _counterRepository.CallNextTicketAtomicAsync(counterId, serviceId);
         }
     }
 }

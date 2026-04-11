@@ -137,7 +137,7 @@ namespace ATSCADA_Library.Repositories
         //    if (listClientsWaiting == null)
         //        return null;
         //}
-        public async Task<Queue?> CallNextTicketAtomicAsync(int counterId, int serviceId)
+        public async Task<CallNextResult> CallNextTicketAtomicAsync(int counterId, int serviceId)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -158,25 +158,31 @@ namespace ATSCADA_Library.Repositories
                 if (nextClient == null)
                 {
                     await transaction.RollbackAsync();
-                    return null;
+                    return new CallNextResult { Queue = null, Counter = null };
                 }
 
                 // Kiểm tra xem record có bị quầy khác lấy không
                 if (nextClient.CounterId != 0)
                 {
                     await transaction.RollbackAsync();
-                    return null;
+                    return new CallNextResult { Queue = null, Counter = null };
                 }
 
                 nextClient.CounterId = counterId;
                 nextClient.Status = "Processing";
                 nextClient.LastTimeUpdated = DateTime.Now;
-                //nextClient.ProcessingTime = DateTime.Now;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return nextClient;
+                // Lấy thông tin Counter để đồng bộ LED
+                var counter = await _context.Counters.FindAsync(counterId);
+
+                return new CallNextResult 
+                { 
+                    Queue = nextClient, 
+                    Counter = counter 
+                };
             }
             catch (Exception ex)
             {
