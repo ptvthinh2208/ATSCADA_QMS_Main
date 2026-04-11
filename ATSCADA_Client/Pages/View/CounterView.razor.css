@@ -1,0 +1,129 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: auto;
+}
+
+.container {
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    padding: 60px 40px;
+    max-width: 900px;
+    width: 90%;
+    text-align: center;
+    margin: 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.title {
+    color: #2c3e50;
+    font-size: clamp(32px, 6vw, 64px);
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.counter-info {
+    color: #555;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 600;
+    margin-bottom: 50px;
+}
+
+.counter-name {
+    color: #3498db;
+    font-weight: 700;
+}
+
+.number-section {
+    background: #3498db;
+    border-radius: 25px;
+    padding: 80px 40px;
+    margin-top: 30px;
+    box-shadow: 0 4px 20px rgba(52, 152, 219, 0.15);
+}
+
+.number-label {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.number-display {
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    display: inline-block;
+    min-width: 300px;
+}
+
+.current-number {
+    color: #2c3e50;
+    font-size: clamp(80px, 18vw, 180px);
+    font-weight: 900;
+    line-height: 1;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 40px 30px;
+    }
+
+    .number-section {
+        padding: 60px 30px;
+    }
+
+    .number-display {
+        padding: 40px;
+        min-width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 30px 20px;
+        border-radius: 20px;
+    }
+
+    .number-section {
+        padding: 40px 20px;
+    }
+
+    .number-display {
+        padding: 30px;
+        min-width: 200px;
+    }
+}

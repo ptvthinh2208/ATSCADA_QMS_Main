@@ -1,0 +1,491 @@
+﻿/* Container chính - Tối ưu cho màn hình 1280px */
+.queue-call-interface {
+    max-width: 100%;
+    margin: 0;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* Layout chính cho màn hình lớn */
+@media (min-width: 1024px) {
+    .queue-call-interface {
+        display: grid;
+        grid-template-columns: 2fr 1fr; /* Tỷ lệ 2:1 thay vì 1fr 400px */
+        gap: 25px;
+        max-width: 1200px; /* Giảm từ 1260px xuống 1200px */
+        margin: 0 auto;
+        padding: 15px;
+    }
+
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        max-width: 550px; /* Giới hạn width cho main-content */
+    }
+
+    .sidebar-content {
+        max-height: calc(100vh - 40px);
+        overflow: hidden;
+        min-width: 425px; /* Đảm bảo sidebar không quá nhỏ */
+    }
+}
+
+/* Center name button */
+.center-name button {
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+}
+
+/* Teller Info Card - Responsive */
+.teller-info-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+    min-height: 100px;
+}
+
+    .teller-info-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+/* Teller Image - Responsive */
+.teller-image-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    flex-shrink: 0;
+}
+
+.teller-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Teller Info */
+.teller-info {
+    flex-grow: 1;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.teller-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.service-info {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 5px;
+    line-height: 1.3;
+}
+
+.teller-id {
+    font-size: 1rem;
+    color: #777;
+    margin-top: 8px;
+}
+
+    .teller-id i {
+        margin-right: 6px;
+        color: #007bff;
+    }
+
+/* Alert - Số đang phục vụ */
+.alert {
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+    .alert h2 {
+        font-size: 2.5rem;
+        margin: 10px 0 0 0;
+        font-weight: bold;
+    }
+
+/* Customer Info Card */
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+    .card-body p {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+.card-title {
+    color: #007bff;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+/* Action Buttons - Responsive Grid */
+.action-buttons-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+    align-items: stretch;
+}
+
+.secondary-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+}
+
+    .secondary-buttons .btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+    }
+
+.btn-lg {
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+.service-name-container {
+    background: #fafbe1;
+    border-radius: 4px;
+    padding: 8px 12px;
+    border: 1px solid #e9ecef;
+}
+
+.service-name {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+/* Sidebar Queue List */
+.queue-sidebar {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    height: fit-content;
+    max-height: calc(100vh - 40px);
+}
+
+    .queue-sidebar .card-body {
+        padding: 15px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+    }
+
+/* Status Section */
+.status-section {
+    font-family: Arial, sans-serif;
+    color: #2f5d62;
+    margin-bottom: 20px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+    .status-item:hover {
+        background-color: #e9ecef;
+        transform: translateX(5px);
+    }
+
+.active-status {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+    .active-status:hover {
+        background-color: #0056b3;
+    }
+
+.status-item .badge {
+    padding: 0.5em 0.8em;
+    font-size: 0.9rem;
+    border-radius: 20px;
+}
+
+/* Queue Cards */
+.queue-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 12px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+    .queue-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        border-color: #007bff;
+    }
+
+.order-number-badge {
+    background-color: #007bff;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.status-badge {
+    background-color: #28a745;
+    color: white;
+    border-radius: 15px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Buttons trong queue cards */
+.queue-card .btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+.btn-call-again {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+}
+
+    .btn-call-again:hover {
+        background-color: #138496;
+    }
+
+/* Status Colors */
+.status-waiting {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status-processing {
+    color: #17a2b8;
+    font-weight: bold;
+}
+
+.status-completed {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-cancel {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.status-transferred {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+.status-missed {
+    color: #fd7e14;
+    font-weight: bold;
+}
+
+.badge-serving {
+    background-color: #fd7e14;
+    color: white;
+}
+
+.badge-waiting {
+    background-color: #ffc107;
+    color: white;
+}
+
+.badge-completed {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Modal Styling */
+.modal-dialog {
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+    padding: 20px;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px 20px;
+}
+
+.custom-modal-width {
+    max-width: 800px;
+}
+
+.custom-modal-body {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 1300px) and (min-width: 1024px) {
+    .queue-call-interface {
+        grid-template-columns: 2fr 1fr; /* Giữ tỷ lệ 2:1 */
+        gap: 12px; /* Giảm gap cho màn hình nhỏ hơn */
+        max-width: 1180px; /* Giảm thêm một chút */
+    }
+
+    .teller-name {
+        font-size: 1.3rem;
+    }
+
+    .alert h2 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 1023px) {
+    .queue-call-interface {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 15px;
+    }
+
+    .action-buttons-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .queue-sidebar {
+        max-height: 400px;
+    }
+
+    .modal-dialog {
+        max-width: 90%;
+        margin: 15px auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .teller-info-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+
+    .teller-info {
+        padding-left: 0;
+        padding-top: 15px;
+    }
+
+    .teller-image-wrapper {
+        width: 70px;
+        height: 70px;
+    }
+
+    .alert h2 {
+        font-size: 1.8rem;
+    }
+
+    .card-body p {
+        font-size: 1rem;
+    }
+}
+
+/* Scrollbar Styling */
+.queue-sidebar .card-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.queue-sidebar .card-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.queue-sidebar .card-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+    .queue-sidebar .card-body::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+/* Animation cho priority star */
+.clerk-info i {
+    font-size: 18px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+    .clerk-info i:hover {
+        transform: scale(1.2);
+        color: #ffc107;
+    }

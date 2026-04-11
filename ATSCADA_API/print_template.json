@@ -1,0 +1,84 @@
+[
+  { "PrinterName": "POS-80C" },
+  {
+    "Text": "================================================",
+    "Justify": 1
+  },
+  {
+    "Text": "TRUNG TÂM PHỤC VỤ HÀNH CHÍNH CÔNG",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1,
+    "PrintMode": 8
+  },
+  { "Text": "" },
+  {
+    "Text": "PHƯỜNG BÌNH QUỚI",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1,
+    "PrintMode": 8
+  },
+  { "Text": "" },
+  {
+    "Text": "Số Thứ Tự",
+    "HeightSize": 2,
+    "WidthSize": 2,
+    "Justify": 1
+  },
+  { "Text": "" },
+  {
+    "Text": "{1}",
+    "HeightSize": 8,
+    "WidthSize": 8,
+    "Justify": 1,
+    "PrintMode": 8
+  },
+  {
+    "Text": "--------------------",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1
+  },
+  { "Text": "" },
+  {
+    "Text": "{3}",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1,
+    "PrintMode": 8
+  },
+  { "Text": "" },
+  {
+    "Text": "Ngày: {Date}     Giờ: {Time}",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1
+  },
+  { "Text": "" },
+  {
+    "Text": "--------------------",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1
+  },
+  {
+    "Text": "Đ/c: Số 1 đường Thanh Đa, Phường Bình Quới, ",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1
+  },
+  {
+    "Text": "TP. Hồ Chí Minh",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1
+  },
+  { "Text": "" },
+  {
+    "Text": "================================================",
+    "HeightSize": 1,
+    "WidthSize": 1,
+    "Justify": 1
+  }
+]

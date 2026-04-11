@@ -1,0 +1,20 @@
+﻿.layout-container {
+    font-family: "Trirong", serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8c0a4;
+    /*background-image: url("img/bg-counter.jpg");*/ 
+    /*background-size: cover;*/ 
+    /*background-position: center;*/ 
+    /*background-repeat: no-repeat;*/ 
+}
+.main {
+    flex-grow: 1;
+    padding: 20px 0;
+    
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}

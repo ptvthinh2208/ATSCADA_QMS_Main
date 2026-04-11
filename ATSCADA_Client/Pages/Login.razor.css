@@ -1,0 +1,62 @@
+﻿.login-container {
+    width: 40%;
+    max-width: 900px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.right-panel {
+    padding: 40px;
+}
+.logo {
+    width: 150px; /* Điều chỉnh kích thước theo ý muốn */
+    height: auto;
+    margin-bottom: 20px;
+}
+.form-control {
+    border-radius: 25px;
+}
+
+.btn-custom {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 25px;
+}
+
+    .btn-custom:hover {
+        background-color: #45a049;
+    }
+
+.forgot-password {
+    font-size: 14px;
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-container {
+        width: 80%;
+        text-align: center;
+    }
+
+    .right-panel {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .form-group input {
+        font-size: 16px;
+    }
+
+    .btn-custom {
+        font-size: 16px;
+        padding: 12px;
+    }
+    .logo {
+        width: 100px; /* Giảm kích thước logo trên màn hình nhỏ */
+    }
+}

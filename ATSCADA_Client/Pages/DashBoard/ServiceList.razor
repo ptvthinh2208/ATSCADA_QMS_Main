@@ -1,0 +1,149 @@
+﻿@page "/serviceslist"
+@using ATSCADA_Library.Entities
+@attribute [Authorize(Roles = "Admin")]
+@inject IQueueApiClient QueueApiClient
+@if (listService == null)
+{
+    <span>
+        Loading Queue item...
+    </span>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row mb-3">
+            <!-- Cột 1: Show entries -->
+            <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex align-items-center">
+                <label for="entries" class="form-label mb-0 me-2">Show</label>
+                <PageSizeSelector PageSizeChanged="OnPageSizeChanged" />
+                <span class="ms-1">entries</span>
+            </div>
+
+            <!-- Cột 2: Add New Counter button -->
+            <div class="col-12 col-md-4 mb-2 mb-md-0 text-md-start text-center">
+                <button class="btn btn-addnew" @onclick="OpenModal">
+                    <i class="fa fa-plus"></i> Add New Service
+                </button>
+            </div>
+
+            <!-- Cột 3: Search bar -->
+            <div class="col-12 col-md-5">
+                <div class="input-group">
+                    <input @oninput="OnSearch" type="text" class="form-control" placeholder="Search by Service Name" aria-label="Search">
+                    <span class="input-group-text">
+                        <i class="bi bi-search"></i> <!-- Bootstrap Icon -->
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped" style="white-space: nowrap;">
+                <thead>
+                    <tr class="tr-hover">
+                        <th @onclick="() => SortByColumn(nameof(Service.Name))">
+                            Service Name
+                            
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(Service.Description))">
+                            Service Description
+                            
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(Service.IsActive))">
+                            Service Status
+                            
+                        </th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in listService!)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Description</td>
+                            <td>
+                                <StatusLabel IsActive="@item.IsActive" OnClick="@(() => ToggleIsActive(item))" />
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-edit" @onclick="() => OpenEditModal(item)">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div style="float:right" class="d-flex justify-content-between align-items-center mt-3">
+            <Pagination MetaData="MetaData" Spread="2" SelectedPage="SelectedPage"></Pagination>
+        </div>
+    </div>
+}
+<!-- Modal Add New-->
+<div class="modal fade @(isModalVisible ? "show d-block" : "")" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Service</h5>
+                <button type="button" class="btn-close" @onclick="CloseModal"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@newService" OnValidSubmit="HandleValidSubmitCreate">
+                    <DataAnnotationsValidator />
+                    <div class="mb-3">
+                        <p for="name" class="form-label">Service Name</p>
+                        <InputText id="name" class="form-control" @bind-Value="newService.Name" />
+                        <ValidationMessage For="@(() => newService.Name)" />
+                    </div>
+                    <div class="mb-3">
+                        <p for="phone">Service Description :</p>
+                        <InputText id="name" class="form-control" @bind-Value="newService.Description" />
+                        <ValidationMessage For="@(() => newService.Description)" />
+                    </div>
+                    <div style="float:right">
+                        <button @onclick="CloseModal" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add New</button>
+                    </div>
+
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Counter Modal -->
+@if (isEditModalVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Service</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@editService" OnValidSubmit="HandleValidSubmitUpdate">
+                        <DataAnnotationsValidator />
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Service Name</label>
+                            <InputText id="name" class="form-control" @bind-Value="editService.Name" />
+                            <ValidationMessage For="@(() => editService.Name)" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone">Service Description :</label>
+                            <InputText id="name" class="form-control" @bind-Value="editService.Description" />
+                            <ValidationMessage For="@(() => editService.Description)" />
+                        </div>
+                        <div style="float:right">
+                            <button @onclick="CloseModal" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}

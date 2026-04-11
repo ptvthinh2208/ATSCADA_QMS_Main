@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Queue Management Systems</title>
+    <base href="/" />
+    <!-- ICON -->
+    <link rel="icon" type="image/png" href="img/logo-400x400.png" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <!-- App-specific CSS -->
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="ATSCADA_Client.styles.css" />
+    <script>
+        window.setBaseHref = function (baseHref) {
+            const baseElement = document.querySelector('base');
+            if (baseElement) {
+                baseElement.setAttribute('href', baseHref.endsWith('/') ? baseHref : baseHref + '/');
+            }
+        };
+    </script>
+
+</head>
+
+<body>
+
+    <div id="app">
+        <component type="typeof(App)" render-mode="Auto" />
+    </div>
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Other Scripts -->
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="js/storageUtils.js" defer></script>
+    <script src="js/reCaptcha.js" defer></script>
+    <script src="js/DownloadFile.js" defer></script>
+    <script src="js/chartHelper.js" defer></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>-->
+
+
+</body>
+
+
+</html>

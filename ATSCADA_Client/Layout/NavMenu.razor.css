@@ -1,0 +1,139 @@
+﻿.navbar-toggler {
+    background-color: rgb(0 201 255 / 50%);
+}
+
+.top-row {
+    height: 3.5rem;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #d6d5d5;
+    box-shadow: 0px 5px 21px -5px #CDD1E1;
+}
+
+.navbar-brand {
+    font-size: 1.1rem;
+}
+
+.bi {
+    display: inline-block;
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+    top: -1px;
+    background-size: cover;
+}
+
+.nav-item {
+    padding-bottom: 0.5rem;
+}
+
+    .nav-item:first-of-type {
+        padding-top: 1rem;
+    }
+
+    .nav-item:last-of-type {
+        padding-bottom: 1rem;
+    }
+
+    .nav-item ::deep a {
+        color: #0000009e !important; /* Set text color to black */
+        border-radius: 4px;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        line-height: 3rem;
+    }
+        .nav-item ::deep a:hover {
+            background-color: #3fbb6c;
+            border-radius: 12px;
+            color: white !important;
+            transform: translateY(-5px);
+            font-weight: 700;
+        }
+    .nav-item ul.nav {
+        display: none;
+        padding-left: 0;
+        
+    }
+
+    .nav-item:hover ul.nav {
+        display: block;
+    }
+
+    .nav-item ::deep .active-link {
+        background-color: #3fbb6c;
+        border-radius: 12px;
+        color: white !important;
+        transform: translateY(-5px);
+        font-weight: 700;
+    }
+
+.active-item {
+    
+}
+.nav-scrollable nav {
+    display: flex;
+    flex-direction: column;
+}
+
+
+    .nav-scrollable .nav-item {
+        text-align: center;
+        white-space: nowrap; /* Đảm bảo text không bị xuống hàng */
+    }
+
+    .nav-scrollable .nav-item .nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Canh giữa icon và text */
+        padding: 0.75rem 1rem;
+        text-decoration: none;
+        white-space: nowrap; /* Ngăn xuống hàng */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Nếu chữ quá dài, sẽ cắt bớt và hiển thị dấu '...' */
+    }
+
+
+        .nav-scrollable .nav-item .nav-link i {
+            display: inline-block;
+            margin-right: 0.5rem; /* Giảm khoảng cách giữa icon và text */
+            font-size: 1.25rem;
+            vertical-align: middle;
+            min-width: 1.5rem; /* Đảm bảo icon có kích thước đồng nhất */
+            text-align: center;
+        }
+        .nav-scrollable .nav-item .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            font-weight: 900;
+        }
+        .nav-scrollable .nav-item .nav-link span {
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Nếu chữ quá dài sẽ hiển thị dấu '...' */
+            display: inline-block;
+        }
+@media (min-width: 641px) {
+    .navbar-toggler {
+        display: none;
+    }
+
+    .collapse {
+        /* Never collapse the sidebar for wide screens */
+        display: block;
+        width: 100%; /* Đảm bảo menu chiếm hết chiều rộng màn hình */
+    }
+
+    .nav-scrollable {
+        height: auto; /* Đặt chiều cao dựa trên nội dung */
+        max-height: 100vh; /* Đặt chiều cao tối đa để tránh tràn ngoài màn hình */
+        overflow-y: auto; /* Cho phép cuộn dọc nếu có quá nhiều mục */
+    }
+    .nav-item {
+        padding: 0.75rem 1rem; /* Đảm bảo khoảng cách giữa các mục menu */
+    }
+    .active-link {
+        transform: translateY(-5px) !important;
+        font-weight: 900 !important;
+    }
+}

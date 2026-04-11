@@ -1,0 +1,246 @@
+﻿@page "/"
+@attribute [Authorize(Roles = "Admin")]
+@using ATSCADA_Client.Components.Chart
+@inject IQueueApiClient QueueApiClient
+@inject IQueueHistoryApiClient QueueHistoryApiClient
+<!-- Page Content -->
+
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12 grid-margin">
+                <div class="row">
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                                <h4 class="font-weight-bold">Welcome @context.User.Identity!.Name</h4>
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
+                    <div class="col-12 col-xl-4">
+                        <div class="justify-content-end d-flex">
+                            <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
+                                <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <i class="mdi mdi-calendar"></i> Today @DatetimeToday
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (!IsManager)
+        {
+            <div class="row">
+                <div class="col-md-6 grid-margin stretch-card mt-4">
+                    <div class="card">
+                        <div class="card-body bg-snow" style="max-height:300px;overflow-y:scroll">
+                            <h5 class="card-title" style="text-align:center;">Top Service Booking Performance</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Service Name</th>
+                                            <th>Total Print</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ListAllService)
+                                        {
+                                            @if (ListAllService.First() == item)
+                                            {
+                                                <tr style="font-size: 1.2rem; font-weight: bold;">
+                                                    <td>@item.Name</td>
+                                                    <td>@item.TotalTicketPrint</td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td>@item.Name</td>
+                                                    <td>@item.TotalTicketPrint</td>
+                                                </tr>
+                                            }
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 grid-margin transparent mt-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-4 stretch-card transparent ">
+                            <div class="card card-tale">
+                                <div class="card-body">
+                                    <p class="mb-2">Today’s Bookings</p>
+                                    <p class="fs-40 mb-2">@TotalBookingOfToday</p>
+                                    <!-- Thêm phần tử để hiển thị chữ "Download" khi hover -->
+                                    <div class="overlay" @onclick="() => ExportToExcel(ListAllQueue)">
+                                        Export
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4 stretch-card transparent">
+                            <div class="card card-dark-blue">
+                                <div class="card-body">
+                                    <p class="mb-2">In This Week :</p>
+                                    <p class="fs-40 mb-2">@TotalBookingOfThisWeek</p>
+                                    <div class="overlay" @onclick="() => ExportToExcel(listQueueHistoriesOfThisWeek,StartDateOfWeek)">
+                                        Export
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                            <div class="card card-light-blue">
+                                <div class="card-body">
+                                    <p class="mb-2">In This Month :</p>
+                                    <p class="fs-40 mb-2">@TotalBookingOfThisMonth</p>
+                                    <div class="overlay" @onclick='() => ExportToExcel(listQueueHistoriesOfThisMonth,StartDateOfMonth)'>
+                                        Export
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 stretch-card transparent">
+                            <div class="card card-light-danger">
+                                <div class="card-body">
+                                    <p class="mb-2">In This Year :</p>
+                                    <p class="fs-40 mb-2">@TotalBookingOfThisYear</p>
+                                    <div class="overlay" @onclick="() => ExportToExcel(listQueueHistoriesOfThisYear,StartDateOfYear)">
+                                        Export
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Charts Section -->
+            <div class="row mt-4">
+
+                <div class="col-lg-6">
+                    <CustomerBarChart />
+                </div>
+                <div class="col-lg-6">
+                    <CustomerPieChart />
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-6 grid-margin transparent mt-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-4 stretch-card transparent ">
+                            <div class="card card-tale">
+                                <div class="card-body">
+                                    <p class="mb-2">Today’s Bookings</p>
+                                    <p class="fs-40 mb-2">@TotalBookingOfToday</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4 stretch-card transparent">
+                            <div class="card card-dark-blue">
+                                <div class="card-body">
+                                    <p class="mb-2">In This Week :</p>
+                                    <p class="fs-40 mb-2">@TotalBookingOfThisWeek</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                            <div class="card card-light-blue">
+                                <div class="card-body">
+                                    <p class="mb-2">In This Month :</p>
+                                    <p class="fs-40 mb-2">@TotalBookingOfThisMonth</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 stretch-card transparent">
+                            <div class="card card-light-danger">
+                                <div class="card-body">
+                                    <p class="mb-2">In This Year :</p>
+                                    <p class="fs-40 mb-2">@TotalBookingOfThisYear</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Charts Section -->
+            <div class="row mt-4">
+
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>@DatetimeTomonth</h5>
+                        </div>
+                        <div class="card-body bg-snow">
+                            <CustomerBarChart />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>@DatetimeTomonth</h5>
+                        </div>
+                        <div class="card-body bg-snow">
+                            <CustomerPieChart />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+
+<script>
+    function downloadChartAsImage(chartContainerId, fileName) {
+        const chartContainer = document.getElementById(chartContainerId);
+        if (chartContainer) {
+            const chartCanvas = chartContainer.querySelector("canvas");
+            if (chartCanvas) {
+                // Tạo một canvas tạm thời để vẽ nền trắng
+                const tempCanvas = document.createElement("canvas");
+                tempCanvas.width = chartCanvas.width;
+                tempCanvas.height = chartCanvas.height;
+                const ctx = tempCanvas.getContext("2d");
+
+                // Vẽ nền trắng
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+                // Vẽ biểu đồ lên canvas tạm thời
+                ctx.drawImage(chartCanvas, 0, 0);
+
+                // Tạo ảnh từ canvas tạm thời
+                const image = tempCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+
+                const link = document.createElement("a");
+                link.href = image;
+                link.download = fileName;
+                link.click();
+            } else {
+                console.error("Canvas not found inside chart container.");
+            }
+        } else {
+            console.error("Chart container not found.");
+        }
+    }
+
+</script>
+

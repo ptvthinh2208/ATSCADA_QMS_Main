@@ -1,0 +1,79 @@
+﻿@using System.IdentityModel.Tokens.Jwt
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager Navigation
+
+@code {
+    protected override async Task OnInitializedAsync()
+
+    {
+
+        var token = await localStorage.GetItemAsync<string>("authToken");
+
+
+
+        if (!string.IsNullOrEmpty(token))
+
+        {
+
+            var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+
+
+            if (jwtToken != null && jwtToken.ValidTo > DateTime.UtcNow)
+
+            {
+
+                // Ví dụ: đọc claim Role từ token
+
+                var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+                var counterId = jwtToken.Claims.FirstOrDefault(c => c.Type == "counterId")?.Value;
+
+
+
+                if (roleClaim == "Admin")
+
+                {
+
+                    Navigation.NavigateTo("./");
+
+                }
+
+                else if (roleClaim == "User" && !string.IsNullOrEmpty(counterId))
+
+                {
+
+                    Navigation.NavigateTo($"/report/{counterId}");
+
+                }
+
+                else
+
+                {
+
+                    Navigation.NavigateTo("./");
+
+                }
+
+
+
+                return;
+
+            }
+
+        }
+
+
+
+        // Không có token hoặc hết hạn thì về trang login
+
+        if (!Navigation.Uri.EndsWith("/login"))
+
+        {
+
+            Navigation.NavigateTo("/login");
+
+        }
+
+    }
+}

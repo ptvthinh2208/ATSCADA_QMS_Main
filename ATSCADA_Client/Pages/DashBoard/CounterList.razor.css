@@ -1,0 +1,187 @@
+﻿/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* Top Bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.session-info select {
+    margin-left: 5px;
+    padding: 5px;
+}
+.btn-edit {
+    color: #ffffff;
+    background-color: #0d6efdc4;
+    border-color: #0d6efd;
+}
+.btn-delete {
+    color: #fff;
+    background-color: #e44272;
+    border-color: #e44272;
+}
+.icons {
+    /* Add icon styling here */
+}
+
+/* Ticket Info */
+.ticket-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.ticket-section {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    text-align: center;
+    flex: 1;
+    margin: 0 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+    .ticket-section:hover {
+        transform: translateY(-5px);
+    }
+
+.ticket-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* Customer Info */
+.customer-info {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.highlight {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* Remaining Log */
+.remaining-log {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+    .remaining-log ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .remaining-log ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+.ticket-img {
+    width: 50px; /* Adjust the width as needed */
+    height: auto; /* Maintains aspect ratio */
+    display: block;
+    margin: 0 auto 10px; /* Centers the image and adds some margin */
+}
+
+.ticket-section.current {
+    background: linear-gradient(135deg, #4CAF50, #81C784); /* Gradient background */
+    color: white;
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .ticket-section.current:hover {
+        transform: translateY(-5px); /* Hover effect */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    }
+
+.ticket-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.ticket-icon {
+    width: 30px; /* Icon size */
+    height: 30px;
+    margin-right: 10px;
+}
+
+.ticket-number {
+    font-size: 40px; /* Large font size for ticket number */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.ticket-time {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background for time */
+    padding: 5px 10px;
+    border-radius: 10px;
+    display: inline-block;
+}
+.btn-addnew {
+    float: right;
+    background-color: #015a5a;
+    color: white;
+}
+.modal-body p {
+    font-weight: bold;
+}
+/*Table Responsive*/
+.table-responsive {
+    overflow-x: auto; /* Hiển thị thanh cuộn ngang khi cần */
+}
+
+.table thead th,
+.table tbody td {
+    white-space: nowrap; /* Không cho xuống dòng tự động */
+    text-overflow: ellipsis; /* Cắt bớt chữ khi quá dài */
+    overflow: hidden; /* Ẩn phần chữ bị cắt */
+}
+
+.table thead th {
+    min-width: 150px; /* Đặt chiều rộng tối thiểu cho các tiêu đề để dễ đọc hơn */
+}
+
+@media (max-width: 576px) {
+    .btn-addnew {
+        width: 100%; /* Button sẽ chiếm toàn bộ chiều rộng trên màn hình nhỏ */
+    }
+
+    .input-group {
+        width: 100%; /* Thanh tìm kiếm cũng chiếm toàn bộ chiều rộng */
+    }
+    .table thead th, .table tbody td {
+        font-size: 12px; /* Giảm kích thước chữ trên các thiết bị nhỏ */
+    }
+}

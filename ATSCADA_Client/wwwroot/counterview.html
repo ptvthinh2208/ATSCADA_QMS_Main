@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đang Phục Vụ</title>
+    <link rel="stylesheet" href="css/view/counterview.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Trạng thái kết nối (góc trên) -->
+    <div id="status" class="status disconnected">Đang kết nối...</div>
+
+    <!-- Nội dung chính -->
+    <div class="container">
+        <div class="counter-info">
+            <span id="counterName">Đang tải...</span>
+        </div>
+
+        <div class="number-box">
+            <div id="currentNumber" class="number">---</div>
+        </div>
+    </div>
+
+    <!-- SignalR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
+    <script src="js/services/counterView.js"></script>
+</body>
+</html>

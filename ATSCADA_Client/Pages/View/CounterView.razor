@@ -1,0 +1,21 @@
+﻿@page "/counterview/{CounterId:int}"
+@layout CountersMainLayout
+@inject IQueueApiClient QueueApiClient
+@inject IQueueSpeechApiClient QueueSpeechApiClient
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<!-- Header with Real-time Clock -->
+<div class="container">
+    <h1 class="title">HỆ THỐNG XẾP HÀNG</h1>
+
+    <div class="counter-info">
+        @Counter.Name : <span class="counter-name" id="counterName">@Counter.ServiceDescription</span>
+    </div>
+
+    <div class="number-section">
+        <div class="number-label">SỐ THỨ TỰ ĐANG PHỤC VỤ</div>
+        <div class="number-display">
+            <div class="current-number" id="currentNumber">@Counter.Code@Counter.CurrentNumber.ToString("D3")</div>
+        </div>
+    </div>
+</div>

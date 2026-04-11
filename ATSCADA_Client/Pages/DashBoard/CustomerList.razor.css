@@ -1,0 +1,65 @@
+﻿.custom-select-status {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    background-color: #f8f9fa;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: #495057;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+    .custom-select-status:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    .custom-select-status:hover {
+        background-color: #e9ecef;
+        cursor: pointer;
+    }
+
+/* Chế độ Flexbox để các phần tử có thể di chuyển khi thu nhỏ bảng */
+.container {
+    display: flex;
+    flex-direction: column; /* Sắp xếp các phần tử theo cột */
+    gap: 20px; /* Khoảng cách giữa các phần tử */
+}
+
+.table-responsive {
+    transition: all 0.5s ease-in-out; /* Thời gian và hiệu ứng mượt mà */
+    overflow: hidden; /* Ẩn phần thừa khi thu nhỏ */
+}
+
+.minimized {
+    transform: scale(0); /* Thu nhỏ bảng */
+    opacity: 0; /* Làm mờ bảng */
+    height: 0; /* Đặt chiều cao về 0 */
+    margin: 0; /* Loại bỏ khoảng cách */
+    padding: 0; /* Loại bỏ padding */
+}
+
+.table-container {
+    width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
+    height: auto; /* Chiều cao của bảng */
+    overflow: hidden;
+}
+
+/* Các phần tử khác sẽ đẩy lên khi bảng bị thu nhỏ */
+.content {
+    transition: margin-top 0.5s ease-in-out; /* Điều chỉnh margin khi thu nhỏ */
+}
+
+/* Khi bảng được thu nhỏ, đẩy các phần tử khác lên */
+.minimized + .content {
+    margin-top: -50px; /* Điều chỉnh khoảng cách giữa các phần tử */
+}
+.btn-zns {
+    border-radius: 15px;
+    border: 0.5px solid;
+}
+.btn-zns:hover {
+
+    background-color: #c5d5da;
+    cursor: pointer;
+}

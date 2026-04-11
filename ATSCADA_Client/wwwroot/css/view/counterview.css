@@ -1,0 +1,149 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Roboto', 'Arial', sans-serif;
+    background: #0f1419;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Container chính - chiếm toàn màn hình */
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+}
+
+/* TÊN QUẦY - SIÊU TO, VÀNG KIM RỰC RỠ */
+.counter-info {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+#counterName {
+    font-size: calc(6vh + 6vw);           /* TO HƠN NỮA */
+    font-weight: 900;
+    color: #FFD700;                       /* Vàng kim sáng */
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    line-height: 1;
+    
+    margin: 0;
+    padding: 0;
+}
+
+/* HỘP SỐ - KHÔNG VIỀN, GRADIENT ĐẸP, CHỈ LÀ NỀN */
+.number-box {
+    background: linear-gradient(135deg, #0a1a2e, #1e3a5f, #0f3460);
+    border-radius: 40px;
+    padding: 60px 40px;
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.7),
+        inset 0 0 40px rgba(255, 255, 255, 0.08);
+    /* BỎ HOÀN TOÀN BORDER */
+    border: none !important;
+    width: 95%;
+    max-width: 1000px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+/* SỐ THỨ TỰ - SIÊU SIÊU TO, CHIẾM GẦN HẾT MÀN HÌNH */
+.number {
+    color: #ffffff;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -6px;
+    text-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(255, 255, 255, 0.4);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    /* SIÊU TO - TỐI ƯU CHO 21 INCH */
+    font-size: calc(24vh + 18vw);
+    margin: 0;
+    padding: 0;
+}
+
+/* HIỆU ỨNG KHI CẬP NHẬT - ĐỎ RỰC, PHÓNG TO */
+.number.updating {
+    transform: scale(1.2) translateY(-15px);
+    color: #ff1744;
+    text-shadow: 
+        0 0 40px #ff1744,
+        0 0 80px #ff1744,
+        0 10px 40px rgba(255, 23, 68, 0.8);
+}
+
+/* TRẠNG THÁI KẾT NỐI - NHỎ GỌN, GÓC TRÊN PHẢI */
+.status {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.status.connected {
+    background: rgba(76, 175, 80, 0.95);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.status.disconnected {
+    background: rgba(244, 67, 54, 0.95);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* TỐI ƯU RIÊNG CHO MÀN HÌNH 21 INCH (1920x1080) */
+@media (min-width: 1680px) and (max-width: 1920px) {
+    #counterName {
+        font-size: calc(7vh + 7vw);
+    }
+    .number {
+        font-size: calc(26vh + 20vw);
+    }
+    .number-box {
+        padding: 80px 60px;
+        border-radius: 50px;
+    }
+}
+
+/* Tablet & nhỏ hơn (dự phòng) */
+@media (max-width: 1024px) {
+    #counterName {
+        font-size: calc(5vh + 5vw);
+    }
+    .number {
+        font-size: calc(18vh + 14vw);
+    }
+    .number-box {
+        padding: 50px 30px;
+        border-radius: 30px;
+    }
+}

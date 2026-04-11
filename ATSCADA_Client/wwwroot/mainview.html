@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Trung tâm Phục vụ Hành chính Công</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <!-- TẢI SIGNALR TRƯỚC -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <link rel="stylesheet" href="css/view/mainview.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="left-header">
+            <img src="img/logo-remove-bg.png" alt="Logo" class="logo">
+            <div class="header-text">
+                TRUNG TÂM PHỤC VỤ HÀNH CHÍNH CÔNG
+                <div>Hành chính phục vụ</div>
+            </div>
+        </div>
+        <div class="clock" id="clock">00:00:00</div>
+    </div>
+
+    <!-- Main – chỉ hiển thị các quầy -->
+    <div class="counters-display">
+        <div class="counter-grid" id="counter-grid">
+            <!-- Được điền bằng JS -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container-fluid">
+            <marquee id="footerMarquee" behavior="scroll" direction="left" scrollamount="8">
+                Đang tải nội dung...
+            </marquee>
+        </div>
+    </footer>
+
+    <script src="js/services/mainView.js" defer></script>
+</body>
+</html>
