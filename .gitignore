@@ -158,7 +158,9 @@ Properties/PublishProfiles/
 *.cache
 *.pid
 *.seed
+*.exe
 *.rar
+*.zip
 
 # =========================
 
