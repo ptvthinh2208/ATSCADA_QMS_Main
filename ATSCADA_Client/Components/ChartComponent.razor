@@ -1,0 +1,21 @@
+﻿@page "/chart-component"
+
+<div id="chartContainer">
+    <!-- Chart canvas here -->
+    <canvas id="chartCanvas"></canvas>
+</div>
+
+@code {
+    [Parameter] public List<int?> Data { get; set; } //giá trị trục Y
+    [Parameter] public List<string> Labels { get; set; } //giá trị trục X
+    [Parameter] public string Title { get; set; } //Tiêu đề
+    [Parameter] public string ChartColor { get; set; }  // Màu biểu đồ
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("renderChart", "chartCanvas", Labels, Data, Title, ChartColor);
+        }
+    }
+}

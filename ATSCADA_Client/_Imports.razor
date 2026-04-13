@@ -1,0 +1,46 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using ATSCADA_Client.Interfaces
+@using System.ComponentModel.DataAnnotations
+@using ATSCADA_Client.Interfaces.Client
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.JSInterop
+@using ATSCADA_Client
+@using ATSCADA_Client.Layout
+
+@using ATSCADA_Client.Services
+
+
+@using Blazored.Toast.Configuration
+@using Blazored.Toast
+@using Blazored.Toast.Services
+@using ATSCADA_Client.Services.Authenticate
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using ATSCADA_Client.Helpers.Pagination
+@using ATSCADA_Client.Components
+@using ATSCADA_Client.Shared
+@using BlazorDateRangePicker
+@using ChartJs.Blazor
+
+@inject IToastService ToastService
+@inject IAuthService AuthService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject HubConnection HubConnection
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@* DI Client *@
+
+@inject ISettingApiClient SettingApiClient
+@inject ICounterApiClient CounterApiClient
+@inject IExportApiClient ExportApiClient
+
+
+
+
+

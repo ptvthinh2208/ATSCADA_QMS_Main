@@ -1,0 +1,328 @@
+﻿@page "/reports"
+@using ATSCADA_Library.Entities
+@attribute [Authorize(Roles = "Admin")]
+@inject IQueueApiClient QueueApiClient
+@inject IReportApiClient ReportApiClient
+@inject IQueueHistoryApiClient QueueHistoryApiClient
+@if (listReport == null)
+{
+    <span>
+        Loading Report list ...
+    </span>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row mb-3 align-items-center">
+
+            <!-- DateRangePicker and Buttons -->
+            <div class="col-md-4">
+                <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("en-US"))" @bind-StartDate="StartDate" @bind-EndDate="EndDate">
+                    <PickerTemplate>
+                        <div id="@context.Id" @onclick="context.Toggle"
+                             style="background: #cacaca; cursor: pointer; padding: 10px 15px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <i class="oi oi-calendar" style="color: #007bff;"></i>&nbsp;
+                            <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? @DatetimeToday : "")</span>
+                            <i class="oi oi-chevron-bottom float-right"></i>
+                        </div>
+                    </PickerTemplate>
+                </DateRangePicker> 
+            </div>
+
+            <div class="col-md-8 d-flex flex-wrap justify-content-start gap-2">
+                <button class="btn btn-info btn-action" @onclick="() => btnReport()">Report</button>
+                <button class="btn btn-success btn-action" @onclick='() => ExportToExcel(listReport,"Total_Statistics")'>Export</button>
+                <button class="btn btn-primary btn-action" @onclick="ShowPerformanceModal">Performance Overview</button>
+                <button class="btn btn-primary btn-action" @onclick="ShowPerformanceServiceModal">Service & Counter Performance</button>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="entries" class="form-label">Show</label>
+                <PageSizeSelector PageSizeChanged="OnPageSizeChanged" />
+                <span class="ms-1">entries</span>
+            </div>
+            @* <div class="col-md-6">
+        <div class="input-group">
+        <input @oninput="OnSearch" disabled= "true" type="text" class="form-control" placeholder="Search" aria-label="Search">
+        <span class="input-group-text">
+        <i class="bi bi-search"></i> <!-- Bootstrap Icon -->
+        </span>
+        </div>
+        </div> *@
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="thead-light">
+                    <tr class="tr-hover">
+
+                        <th @onclick="() => SortByColumn(nameof(Report.CreatedDate))">
+                            Time Create
+
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(Report.TotalPrint))">
+                            Total Number Print
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(Report.TotalCompleted))">
+                            Total Number Completed
+
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(Report.TotalMissed))">
+                            Total Number Missed
+
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(Report.TotalMissed))">
+                            Total Number Cancel
+
+                        </th>
+                        @* <th>#</th> *@
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in listReport!)
+                    {
+                        <tr>
+
+                            <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                            <td>@item.TotalPrint</td>
+                            <td>@item.TotalCompleted</td>
+                            <td>@item.TotalMissed</td>
+                            <td>@item.TotalCancel</td>
+                            @* <td>
+                                <button class="btn btn-primary" @onclick="() => ExportQueueDetail((int)item.Id)">
+                                    <i class="fa-solid fa-clipboard"></i>
+                                </button>
+                            </td> *@
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div style="float:right" class="d-flex justify-content-between align-items-center mt-3">
+            <Pagination MetaData="MetaData" Spread="2" SelectedPage="SelectedPage"></Pagination>
+        </div>
+    </div>
+}
+@if (isPerformanceModalVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Performance Chart</h5>
+                    <button type="button" class="close" @onclick="HidePerformanceModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Tabs and buttons layout using Flexbox -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link @(activeTab == "TotalPrint" ? "active" : "")" @onclick='() => SwitchTab("TotalPrint")'>Total Print</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(activeTab == "TotalCompleted" ? "active" : "")" @onclick='() => SwitchTab("TotalCompleted")'>Total Completed</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(activeTab == "TotalCancel" ? "active" : "")" @onclick='() => SwitchTab("TotalCancel")'>Total Cancel</a>
+                            </li>
+                        </ul>
+
+                        <!-- Buttons next to tabs -->
+                        <div>
+
+                            <button class="btn btn-success" style="min-width: 120px;" @onclick="() => ExportDetailToExcel(filteredData!,activeTab)">Export</button>
+                        </div>
+                    </div>
+                    <!-- Chart content based on selected tab -->
+                    <div>
+                        @if (activeTab == "TotalPrint")
+                        {
+                            <ChartComponent Data="dataCharts" Labels="dateLabels" Title="Total Print Chart" ChartColor="@chartColor" />
+                        }
+                        else if (activeTab == "TotalCompleted")
+                        {
+                            <ChartComponent Data="dataCharts" Labels="dateLabels" Title="Total Completed Chart" ChartColor="@chartColor" />
+                        }
+                        else if (activeTab == "TotalCancel")
+                        {
+                            <ChartComponent Data="dataCharts" Labels="dateLabels" Title="Total Cancel Chart" ChartColor="@chartColor" />
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+@if (isPerformanceServiceModalVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Service Performance</h5>
+                    <button type="button" class="btn-close" @onclick="HidePerformanceModal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Tabs and buttons layout using Flexbox -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link @(SelectedTab == "TotalPrint" ? "active" : "")" @onclick='() => SelectTab("TotalPrint")'>TotalPrint</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(SelectedTab == "TotalCompleted" ? "active" : "")" @onclick='() => SelectTab("TotalCompleted")'>TotalCompleted</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(SelectedTab == "TotalCancel" ? "active" : "")" @onclick='() => SelectTab("TotalCancel")'>TotalCancel</a>
+                            </li>
+                        </ul>
+
+                        <!-- Buttons next to tabs -->
+                        <div>
+
+                            <button class="btn btn-success" style="min-width: 120px;" @onclick="() => ExportDetailToExcel(filteredData!,SelectedTab)">Export</button>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <div class="flex-grow-1 me-2">
+                            <label for="service-select" class="form-label">Select Service:</label>
+                            <select id="service-select" class="form-select" @onchange="OnServiceSelected">
+                                <option value="">Service:</option>
+                                @foreach (var service in availableServices)
+                                {
+                                    <option value="@service.Id">@service.Description</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="flex-grow-1 ms-2">
+                            <label for="counter-select" class="form-label">Select Counter:</label>
+                            <select id="counter-select" class="form-select" @onchange="OnCounterSelected">
+                                <option value="">Counter:</option>
+                                @foreach (var counter in listCounterByServiceId)
+                                {
+                                    <option value="@counter.Id">@counter.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="chartContainer" class="mt-4">
+                        <!-- Chart sẽ được render ở đây -->
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="HidePerformanceModal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+@code {
+    private string SelectedTab = "TotalPrint";
+    private long SelectedService { get; set; }
+    private int SelectedCounter { get; set; }
+    private Dictionary<string, int> processedData = new Dictionary<string, int>();
+    private void FilterData()
+    {
+        // Bắt đầu với danh sách gốc
+        var data = listQueueHistories.AsQueryable();
+
+        // Lọc theo dịch vụ
+        if (SelectedService > 0)
+        {
+            data = data.Where(q => q.ServiceId == SelectedService);
+        }
+        // Lọc theo quầy
+        if (SelectedCounter > 0)
+        {
+            data = data.Where(q => q.CounterId == SelectedCounter);
+        }
+        // Lọc theo tab
+        switch (SelectedTab)
+        {
+            case "TotalCancel":
+                data = data.Where(q => q.Status != "Completed");
+                break;
+            case "TotalCompleted":
+                data = data.Where(q => q.Status == "Completed");
+                break;
+                // Thêm các case khác nếu cần
+        }
+
+        // Cập nhật dữ liệu đã lọc
+        filteredData = data.ToList();
+
+        // Tải lại biểu đồ sau khi lọc
+        LoadChartData();
+    }
+    private async Task OnServiceSelected(ChangeEventArgs e)
+    {
+        if (long.TryParse(e.Value?.ToString(), out var serviceId))
+        {
+            SelectedService = serviceId;
+            await GetListCounterByServiceId(serviceId);
+        }
+        else
+        {
+            SelectedService = 0; // Mặc định
+        }
+
+        // Gọi phương thức lọc chung
+        FilterData();
+
+        await Task.CompletedTask; // Nếu LoadChartData là đồng bộ, không cần await
+    }
+    private async Task OnCounterSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var counterId))
+        {
+            SelectedCounter = counterId;
+        }
+        else
+        {
+            SelectedCounter = 0; // Mặc định
+        }
+
+        // Gọi phương thức lọc chung
+        FilterData();
+
+        await Task.CompletedTask; // Nếu LoadChartData là đồng bộ, không cần await
+    }
+    private void SelectTab(string tab)
+    {
+        SelectedTab = tab;
+        // Gọi phương thức lọc chung
+        FilterData();
+    }
+    private async Task LoadChartData()
+    {
+        var pagingAll = new PagingParameters();
+        var startDateFormat = StartDate!.Value.DateTime;
+        var endDateFormat = EndDate!.Value.DateTime;
+        var data = await QueueHistoryApiClient.GetChartDataAsync(pagingAll, startDateFormat, endDateFormat, SelectedTab, SelectedService, SelectedCounter);
+        RenderChart(data);
+    }
+    private void RenderChart(Dictionary<string, List<int>> data)
+    {
+        if (processedData.Any())
+        {
+            processedData.Clear();
+        }
+        // Chuyển đổi `Dictionary<string, List<int>>` thành định dạng phù hợp cho JavaScript
+        processedData = data.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.Sum()
+        );
+        JSRuntime.InvokeVoidAsync("updateChart", processedData);
+    }
+}

@@ -1,0 +1,48 @@
+﻿.card-header {
+    background-color: #f8f9fa; /* Màu nền nhẹ cho header */
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.dropdown-container {
+    flex: 1; /* Cho phép dropdown chiếm không gian linh hoạt */
+    max-width: 200px; /* Giới hạn chiều rộng */
+}
+
+.month-select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #495057;
+}
+
+.download-button {
+    margin-left: 15px;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+    .download-button:hover {
+        background-color: #0056b3;
+    }

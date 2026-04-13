@@ -1,0 +1,92 @@
+﻿<div class="top-row ps-2 navbar navbar-dark">
+    <div class="container-fluid">
+        <a href="#" style="margin:auto">
+            <img src="img/logo-remove-bg.png" alt="Logo" height="40" class="d-inline-block align-top" />
+        </a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable">
+    <nav class="flex-column">
+        <AuthorizeView Roles="Admin">
+            <div class="nav-item">
+                <NavLink class="nav-link" href="./" Match="NavLinkMatch.All" ActiveClass="active-link">
+                    <i class="fa fa-home"></i> Home
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="userslist" ActiveClass="active-link">
+                    <i class="fa fa-users" aria-hidden="true"></i> User List
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="serviceslist" ActiveClass="active-link">
+                    <i class="fa fa-list-ol" aria-hidden="true"></i> Service List
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="counterslist" ActiveClass="active-link">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i> Counter List
+                </NavLink>
+            </div>
+           
+            <div class="nav-item">
+                <NavLink class="nav-link" href="reports" ActiveClass="active-link">
+                    <i class="fa fa-line-chart" aria-hidden="true"></i> Report
+                </NavLink>
+            </div>
+           
+            @* <div class="nav-item">
+                <NavLink class="nav-link" href="feedbacks" ActiveClass="active-link">
+                    <i class="fa fa-star" aria-hidden="true"></i> Feedback
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="todaycustomerlist" ActiveClass="active-link">
+                    <i class="fa fa-table" aria-hidden="true"></i> Today Customer List
+                </NavLink>
+            </div> *@
+            @* <div class="nav-item">
+                <NavLink class="nav-link" href="historicalcustomerlist" ActiveClass="active-link">
+                    <i class="fa fa-database"></i> His. Customer List
+                </NavLink>
+            </div> *@
+            
+           @*  <div class="nav-item">
+                <NavLink class="nav-link" href="zaloconfig" ActiveClass="active-link">
+                    <img src="img/zalozns.png" style="width: 20px; height: 20px; object-fit: cover; margin-right: 8px;" alt="Zalo Icon" /> 
+                    Zalo Configuration
+                </NavLink>
+            </div> *@
+            <div class="nav-item">
+                <NavLink class="nav-link" href="settings" ActiveClass="active-link">
+                    <i class="fa fa-cogs" aria-hidden="true"></i> Setting
+                </NavLink>
+            </div>
+
+
+
+        </AuthorizeView>
+        <AuthorizeView Roles="Manager">
+            <div class="nav-item">
+                <NavLink class="nav-link" href="@ReportByServiceIdUrl" ActiveClass="active-link">
+                    <i class="fa fa-clipboard" aria-hidden="true"></i> Reports
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="@CounterByServiceIdUrl" ActiveClass="active-link">
+                    <i class="fa fa-television" aria-hidden="true"></i> My Counter
+                </NavLink>
+            </div>
+
+        </AuthorizeView>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="@LoutOutByUserNameUrl">
+                <i class="fa fa-sign-out" aria-hidden="true"></i> Log Out
+            </NavLink>
+        </div>
+    </nav>
+</div>

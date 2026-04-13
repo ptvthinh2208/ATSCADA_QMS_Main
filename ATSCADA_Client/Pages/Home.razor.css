@@ -1,0 +1,49 @@
+﻿.card {
+    border-radius: 20px;
+    position: relative; /* Để chứa overlay */
+    overflow: hidden; /* Ẩn phần overlay khi nó không hiển thị */
+}
+    .card.card-tale {
+        background: #7DA0FA;
+        color: #ffffff;
+
+    }
+    .card.card-dark-blue {
+        background: #4747A1;
+        color: #ffffff;
+    }
+    .card.card-light-blue {
+        background: #7978E9;
+        color: #ffffff;
+    }
+    .card.card-light-danger {
+        background: #F3797E;
+        color: #ffffff;
+    }
+.bg-snow {
+    background-color: snow;
+}
+
+.fs-40 {
+    font-size: 40px;
+}
+
+/* Hiệu ứng overlay khi hover */
+.card .overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 8px;
+    opacity: 0; /* Bắt đầu với opacity 0 để ẩn */
+    transition: opacity 0.3s ease-in-out; /* Hiệu ứng mờ dần khi hover */
+}
+
+.card:hover .overlay {
+    opacity: 1; /* Hiển thị overlay với độ mờ 100% */
+    cursor: pointer;
+}

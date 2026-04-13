@@ -1,0 +1,217 @@
+﻿@page "/todaycustomerlist"
+@using ATSCADA_Library.Entities
+@attribute [Authorize(Roles = "Admin")]
+
+@inject IZnsConfigApiClient ZnsConfigApiClient
+@inject IQueueApiClient QueueApiClient
+@inject IQueueHistoryApiClient QueueHistoryApiClient
+@if (listQueueWaiting == null)
+{
+    <span>
+        Loading...
+    </span>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-4">
+                <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("en-US"))" @bind-StartDate="StartDate" @bind-EndDate="EndDate">
+                    <PickerTemplate>
+                        <div id="@context.Id" @onclick="context.Toggle"
+                             style="background: #cacaca; cursor: pointer; padding: 10px 15px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <i class="oi oi-calendar" style="color: #007bff;"></i>&nbsp;
+                            <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? @DatetimeToday : "")</span>
+                            <i class="oi oi-chevron-bottom float-right"></i>
+                        </div>
+                    </PickerTemplate>
+                </DateRangePicker>
+            </div>
+
+            <div class="col-md-8 d-flex justify-content-start" style="gap: 10px;">
+                <button class="btn btn-zns ">
+                    <img src="img/Logo-ZNS-Final.png" style=" height: 40px; " alt="Zalo Icon" @onclick="() => SendMessagesToSelectedCustomers()" />
+                </button>
+            </div>
+        </div>
+        <div class="row mb-3 mt-3">
+            <div class="control-buttons">
+                <button class="btn btn-sm btn-primary" onclick="toggleTableSize('table1')">List Waiting</button>
+            </div>
+        </div>
+
+        <div id="table1" class="table-responsive">
+            <table class="table table-hover">
+                <thead class="thead-light">
+                    <tr class="tr-hover">
+                        <th><input type="checkbox" @* @onchange="SelectAllCustomers" *@ /></th>
+                        <th @onclick="() => SortByColumn(nameof(QueueHistory.FullName))">
+                            Full Name
+
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(QueueHistory.PhoneNumber))">
+                            Phone Number
+
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(QueueHistory.DescriptionService))">
+                            Service
+
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(QueueHistory.Status))">
+                            Status
+
+                        </th>
+                        <th @onclick="() => SortByColumn(nameof(QueueHistory.PrintTime))">
+                            Print Time
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in listQueueWaiting!)
+                    {
+                        <tr>
+                            <td><input type="checkbox" /></td>
+                            <td>@item.FullName</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.DescriptionService</td>
+                            <td>
+                                <select class="form-select form-select-sm custom-select-status"
+                                        @onchange='(e) => UpdateStatus(item,e.Value!.ToString()!)'>
+                                    <option value="Waiting" selected='@((item.Status == "Waiting") ? "selected" : null)'>Waiting</option>
+                                    <option value="Contacted" selected='@((item.Status == "Contacted") ? "selected" : null)'>Contacted</option>
+                                    <option value="Completed" selected='@((item.Status == "Completed") ? "selected" : null)'>Completed</option>
+                                </select>
+                            </td>
+                            <td>@item.PrintTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- Các phần tử khác sẽ được đẩy lên khi bảng thu nhỏ -->
+        <div class="content">
+            <div class="row mb-3 mt-3">
+                <div class="control-buttons">
+                    <button class="btn btn-sm btn-primary" onclick="toggleTableSize('table2')">List Completed</button>
+                </div>
+            </div>
+            <div id="table2" class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr class="tr-hover">
+                            <th><input type="checkbox" @* @onchange="SelectAllCustomers" *@ /></th>
+                            <th @onclick="() => SortByColumn(nameof(QueueHistory.FullName))">
+                                Full Name
+
+                            </th>
+                            <th @onclick="() => SortByColumn(nameof(QueueHistory.PhoneNumber))">
+                                Phone Number
+
+                            </th>
+                            <th @onclick="() => SortByColumn(nameof(QueueHistory.DescriptionService))">
+                                Service
+
+                            </th>
+                            <th @onclick="() => SortByColumn(nameof(QueueHistory.Status))">
+                                Status
+
+                            </th>
+                            <th @onclick="() => SortByColumn(nameof(QueueHistory.PrintTime))">
+                                Print Time
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in listQueueCompleted!)
+                        {
+                            <tr>
+                                <td><input type="checkbox" /></td>
+                                <td>@item.FullName</td>
+                                <td>@item.PhoneNumber</td>
+                                <td>@item.DescriptionService</td>
+                                <td>
+                                    <select class="form-select form-select-sm custom-select-status"
+                                            @onchange='(e) => UpdateStatus(item,e.Value!.ToString()!)'>
+                                        <option value="Waiting" selected='@((item.Status == "Waiting") ? "selected" : null)'>Waiting</option>
+                                        <option value="Contacted" selected='@((item.Status == "Contacted") ? "selected" : null)'>Contacted</option>
+                                        <option value="Completed" selected='@((item.Status == "Completed") ? "selected" : null)'>Completed</option>
+                                    </select>
+                                </td>
+                                <td>@item.PrintTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+
+        
+    </div>
+}
+
+<!-- Modal select Template to send ZNS -->
+@if (isModalSendZNS)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Send ZNS For Customers</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p for="templateZns">Template ZNS :</p>
+                        <InputSelect @bind-Value="TemplateName" id="numberSelect" class="form-control">
+                            <option value="">--Select Template--</option>
+                            @foreach (var item in znsInfos)
+                            {
+                                <option value="@item.TemplateName">@item.TemplateName (@item.TemplateID)</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    @*  <div class="mb-3">
+                <label for="name" class="form-label">Customer Selected:</label>
+                <InputText id="name" class="form-control" @bind-Value="@CustomersSelected" Disabled="true" />
+                </div> *@
+                    <div style="float:right">
+                        <button @onclick="CloseModal" class="btn btn-secondary">Cancel</button>
+                        <button @onclick="ConfirmSendMessages" class="btn btn-primary">Send Messages</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- Confirm Send ZNS  -->
+@if (isConfirmModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" id="deleteModal" aria-labelledby="deleteModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to send ZNS Zalo to this customer?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
+                    <button type="button" class="btn btn-success" @onclick="@(() => SendBulkMessages(selectedCustomers))">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    function toggleTableSize(tableId) {
+        const tableElement = document.getElementById(tableId);
+        if (tableElement) {
+            tableElement.classList.toggle('minimized');
+        } else {
+            console.error(`Table with ID ${tableId} not found.`);
+        }
+    }
+</script>

@@ -1,0 +1,16 @@
+﻿<select @onchange="HandlePageSizeChanged" id="numberSelect" class="form-select form-select-sm d-inline-block" style="width: 100px;">
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+    <option value="0">All</option>
+</select>
+
+@code {
+    [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
+    private async Task HandlePageSizeChanged(ChangeEventArgs e)
+    {
+        int selectedPageSize = Convert.ToInt32(e.Value);
+        await PageSizeChanged.InvokeAsync(selectedPageSize);
+    }
+}

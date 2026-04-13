@@ -1,0 +1,39 @@
+﻿@using System.Globalization
+
+@inject IQueueHistoryApiClient QueueHistoryApiClient
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <!-- Dropdown chọn tháng -->
+        <div class="dropdown-container">
+            <select @onchange="OnMonthChanged" class="form-select month-select">
+                @foreach (var month in GetMonthList())
+                {
+                    <option value="@month.ToString("yyyy-MM")" selected="@(month.Month == DateTime.Now.Month && month.Year == DateTime.Now.Year)">
+                        @month.ToString("MMMM yyyy", CultureInfo.InvariantCulture)
+                    </option>
+                }
+            </select>
+        </div>
+        <!-- Button Download -->
+        <div>
+            <button @onclick="DownloadChart" class="btn download-button">Download Chart</button>
+        </div>
+    </div>
+    <div class="card-body bg-snow">
+        <!-- Biểu đồ bar -->
+        @if (_barConfig != null)
+        {
+            <div id="chartContainer">
+                <Chart Config="_barConfig"></Chart>
+            </div>
+        }
+        
+    </div>
+</div>
+
+
+
+
+
+
+

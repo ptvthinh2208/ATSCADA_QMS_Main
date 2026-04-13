@@ -1,0 +1,161 @@
+﻿@page "/zaloconfig"
+@attribute [Authorize(Roles = "Admin")]
+
+@inject IZnsConfigApiClient ZnsConfigApiClient
+<div class="container mt-5">
+    <div class="card w-100 shadow-sm">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle text-white p-2 me-3" style="width: 40px; height: 40px; text-align: center; font-weight: bold;">
+                        <img src="img/zalozns.png" style="width: 20px; height: 20px; object-fit: cover; margin-right: 8px;" alt="Zalo Icon" />
+                    </div>
+                    <div>
+                        <h5 class="mb-0">Zalo Configuration</h5>
+                        <p class="mb-0 text-muted">Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                    <label class="slider-label">Zalo ZNS Info</label>
+                    <button class="btn btn-link" @onclick="() => OpenModalDetailZnsInfo()"><i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                    <label class="slider-label">My Template ZNS</label>
+                    <button class="btn btn-link" @onclick="() => OpenModalListTemplate()"><i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                    <label class="slider-label">Turn On/Off Send Notification Zalo</label>
+                    <label class="switch">
+                        <input type="checkbox" @bind="IsZaloEnabled">
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Modal select template zns -->
+@if (showModalSelectTemplate)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="font-weight:bold" class="modal-title">Setting Scheduled</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@settingUpdateRequest">
+                        <div class="form-group">
+                            <p for="templateZns">Template ZNS :</p>
+                            <InputSelect @bind-Value="TemplateName" id="numberSelect" class="form-control">
+                                <option value="">--Select Template--</option>
+                                @foreach (var item in znsInfos)
+                                {
+                                    <option value="@item.TemplateName">@item.TemplateName (@item.TemplateID)</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveSettings">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- Modal config zns info -->
+@if (showModalConfigZnsInfo)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="font-weight:bold" class="modal-title">Zalo ZNS Info</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@settingUpdateRequest">
+                        <div class="form-group">
+                            <p for="AppID">App ID</p>
+                            <InputText id="AppID" class="form-control" @bind-Value="znsConfig.AppID" />
+                        </div>
+                        <div class="form-group">
+                            <p for="SecretKey">Secret Key</p>
+                            <InputText id="SecretKey" class="form-control" @bind-Value="znsConfig.SecretKey" />
+                        </div>
+                        <div class="form-group">
+                            <p for="AccessToken">Access Token</p>
+                            <InputText id="AccessToken" class="form-control" @bind-Value="znsConfig.AccessToken"  />
+                        </div>
+
+                        <div class="form-group">
+                            <p for="RefreshToken">Refresh Token</p>
+                            <InputText id="RefreshToken" class="form-control" @bind-Value="znsConfig.RefreshToken"  />
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveZnsInfo">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal List template -->
+@if (showModalListTemplate)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="font-weight:bold" class="modal-title">My Template ZNS</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                   
+                </div>
+                <div class="modal-body">
+                   @*  <button class="btn btn-addnew mb-4">
+                        <i class="fa fa-plus"></i> Add
+                    </button> *@
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr class="tr-hover">
+                                    <th>
+                                        Template ID
+
+                                    </th>
+                                    <th>
+                                        Template Name
+                                    </th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in znsInfos!)
+                                {
+                                    <tr>
+                                        <td>@item.TemplateID</td>
+                                        <td>@item.TemplateName</td>
+                                       
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+}

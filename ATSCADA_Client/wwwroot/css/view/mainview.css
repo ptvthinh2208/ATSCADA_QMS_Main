@@ -1,0 +1,155 @@
+﻿/* app.css */
+* {
+    box-sizing: border-box;
+}
+
+/* FULLY KIOSK: Full màn hình */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Roboto', 'Noto Sans', sans-serif;
+    background: #f4f4f4;
+}
+.header {
+    height: 80px;           /* GIẢM XUỐNG */
+    padding: 0 20px;
+    background: #833030;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    position: relative;
+    z-index: 10;
+}
+
+
+.left-header {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 60px;
+    margin-right: 20px;
+}
+
+.header-text {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+    .header-text div {
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+.clock {
+    font-size: 24px;
+}
+
+.counters-display {
+    height: calc(100vh - 130px);  /* 80 + 50 = 130px */
+    overflow: hidden;
+    padding: 10px 20px;
+    box-sizing: border-box;
+}
+
+.counter-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 14px;
+    width: 100%;
+    height: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+.counter-box {
+    background: linear-gradient(135deg, #f0f8ff, #e6f3fa);
+    padding: 12px 8px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    border: 1.5px solid #00505c;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0; /* CHO PHÉP CO LẠI */
+    font-size: 14px;
+}
+
+.counter-name {
+    font-weight: 900;
+    font-size: 16px;
+    color: #003d47;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.current-number {
+    font-size: 32px;
+    font-weight: 900;
+    color: #d32f2f;
+    letter-spacing: 0.5px;
+}
+
+    
+.footer {
+    height: 50px;           /* GIẢM XUỐNG */
+    background: #833030;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 16px;
+    position: relative;
+    z-index: 10;
+}
+
+
+    .footer marquee {
+        font-size: 16px;
+    }
+
+
+/* Mobile nhỏ */
+@media (max-width: 768px) {
+    .counter-box {
+        padding: 20px 16px;
+        min-height: 100px;
+    }
+
+    .counter-name {
+        font-size: 18px;
+    }
+
+    .current-number {
+        font-size: 36px;
+    }
+
+    .counter-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+    }
+}
+
+/* TV lớn */
+@media (min-width: 1920px) {
+    .counter-name {
+        font-size: 28px;
+    }
+
+    .current-number {
+        font-size: 64px;
+    }
+
+    . visually-hidden {
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,215 @@
+﻿@page "/settings"
+@attribute [Authorize(Roles = "Admin")]
+@inject IFileUploadApiClient FileUploadApiClient
+@inject IWorkShiftApiClient WorkShiftApiClient
+<div class="container mt-5">
+    <div class="card w-100 shadow-sm">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-success text-white p-2 me-3" style="width: 40px; height: 40px; text-align: center; font-weight: bold;">
+                        <i class="fa fa-cog" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">Setting Application</h5>
+                        <p class="mb-0 text-muted">Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                    <label class="slider-label">UI View TV</label>
+                    <div class="dropdown">
+                        <button class="btn btn-link" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" onclick="window.location.href='./view'">View</a></li>
+                            <li><a class="dropdown-item" @onclick="() => OpenEditModal(nameof(settingUpdateRequest.FooterTextCountersMainView))">Edit</a></li>
+                        </ul>
+                    </div>
+                </li>
+                @*  <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                <label class="slider-label">Workshift Configuration</label>
+                <button class="btn btn-link" @onclick="() => OpenSettingWorkShift()"><i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+                </li> *@
+
+                <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                    <label class="slider-label">Scheduled Task (Cài đặt thời gian reset hàng chờ)</label>
+                    <button class="btn btn-link" @onclick="() => OpenEditModal(nameof(settingUpdateRequest.ScheduledTaskTime))"><i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+                </li>
+
+                @* <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                    <label class="slider-label">Turn On/Off Appointment Page </label>
+                    <label class="switch">
+                        <input type="checkbox" @bind="IsAppointmentEnabled">
+                        <span class="slider"></span>
+                    </label>
+                </li> *@
+                <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                    <label class="slider-label">Turn On/Off Speech Call Number On TV</label>
+                    <label class="switch">
+                        <input type="checkbox" @bind="IsSpeechCallEnabled">
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<!-- Edit Scheduled Modal -->
+@if (isModalScheduledVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="font-weight:bold" class="modal-title">Setting Scheduled</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@settingUpdateRequest">
+                        <div class="form-group">
+                            <p for="scheduledTaskTime">Daily Schedul Task Excution</p>
+                            <InputText type="time" class="form-control" id="scheduledTaskTime" @bind-Value="ScheduledTaskTimeString" />
+                        </div>
+                        <div class="form-group">
+                            <p for="scheduledTaskTime">Last Time Execution</p>
+                            <InputText type="datetime" readonly class="form-control" id="lastTaskExecuted" @bind-Value="LastTaskExecutedString" />
+                        </div>
+                        @* <div class="form-group">
+                            <button @onclick="ConfirmExcuteTask" class="btn btn-warning">Execute Now</button>
+                        </div> *@
+                    </EditForm>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveSettings">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- Confirm Send ZNS  -->
+@if (isConfirmModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" id="deleteModal" aria-labelledby="deleteModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to execute data now?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
+                    <button type="button" class="btn btn-success" @onclick="ExecuteNow">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- Edit UI View Modal -->
+@if (isModalViewUIVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="font-weight:bold" class="modal-title">Edit View UI</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@settingUpdateRequest">
+                        <!-- Chỉnh sửa footer - chọn màu chữ - size chữ -->
+                        <div class="form-group">
+                            <p style="float:left" for="footerText">Edit Footer on TV View</p>
+                            <InputText style="float:right" type="color" class="footerTextColor" @bind-Value="footerTextColor" />
+                            <InputText style="float:right;width: 20%;height: 27px; margin-right: 10px;" type="text" @bind-Value="footerTextFontSize" />
+                            <InputText type="text" class="form-control" id="footerText" @bind-Value="footerTextCountersMainView" />
+                        </div>
+                        <!-- Chỉnh sửa giới hạn hiển thị số quầy -->
+                         <div class="form-group">
+                            <p for="footerText">Edit Max Visible Counters </p>
+                            <InputText type="text" class="form-control" id="visibleCounters" @bind-Value="MaxVisibleCounters" />
+                        </div>
+                        <!-- Thêm phần chọn tệp video -->
+                        <div class="form-group mt-3">
+                            <p for="videoFile">Select Video File</p>
+                            <!-- InputText hiển thị link của video sau khi chọn -->
+                            <InputText class="form-control" @bind-Value="UrlVideoCountersMainView" readonly />
+                            <InputFile id="videoFile" OnChange="HandleSelectedVideo" />
+                            @if (videoUrlUpload != null)
+                            {
+                                <!-- Hiển thị video sau khi chọn -->
+                                <video width="320" height="240" controls>
+                                    <source src="@videoUrlUpload" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            }
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveSettings">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal List template -->
+@if (isModalSettingWorkShift)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="font-weight:bold" class="modal-title">My Template ZNS</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+
+                </div>
+                <div class="modal-body">
+                    <button class="btn btn-addnew mb-4">
+                        <i class="fa fa-plus"></i> Add
+                    </button>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr class="tr-hover">
+                                    <th>
+                                        Work Shift
+
+                                    </th>
+                                    <th>
+                                        Start Time
+
+                                    </th>
+                                    <th>
+                                        End Time
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in workShifts!)
+                                {
+                                    <tr>
+                                        <td>@item.NameWorkShift</td>
+                                        <td>@item.StartTime</td>
+                                        <td>@item.EndTime</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

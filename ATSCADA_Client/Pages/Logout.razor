@@ -1,0 +1,12 @@
+﻿@page "/logout/{userNameFromJWT}"
+
+@code {
+    [Parameter]
+    public string? userNameFromJWT { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await AuthService.Logout(userNameFromJWT!);
+        NavigationManager.NavigateTo("./login");
+    }
+}

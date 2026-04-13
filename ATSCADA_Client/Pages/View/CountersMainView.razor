@@ -1,0 +1,237 @@
+﻿@page "/view"
+@layout CountersMainLayout
+@inject IQueueApiClient QueueApiClient
+@inject IQueueSpeechApiClient QueueSpeechApiClient
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<script>
+    // Hàm phát file .mp3 thông thường
+    window.playIntroAudio = (mp3Url) => {
+        return new Promise((resolve, reject) => {
+            try {
+                const intro = new Audio(mp3Url);
+                intro.play().then(() => {
+                    intro.onended = () => {
+                        resolve(); // tiếp tục khi nhạc intro kết thúc
+                    };
+                }).catch(reject);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    };
+
+    // Hàm phát base64 sau khi phát intro
+    window.playBase64AudioWithIntro = async (introUrl, base64AudioUrl) => {
+        try {
+            await window.playIntroAudio(introUrl);
+            await window.playBase64Audio(base64AudioUrl);
+        } catch (err) {
+            console.error("Audio play error:", err);
+        }
+    };
+
+    // Hàm gốc phát base64
+    window.playBase64Audio = (audioUrl) => {
+        return new Promise((resolve, reject) => {
+            try {
+                var audio = new Audio(audioUrl);
+                audio.play().then(() => {
+                    audio.onended = () => {
+                        resolve(); // Khi phát xong
+                    };
+                }).catch(reject);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    };
+</script>
+<!-- Header with Real-time Clock -->
+<div class="header">
+    <div class="left-header">
+        <img src="img/logo-remove-bg.png" alt="Logo" class="logo">
+        <div class="header-text">
+            TRUNG TÂM PHỤC VỤ HÀNH CHÍNH CÔNG PHƯỜNG TRÀ VINH - TỈNH VĨNH LONG
+            <div>Hành chính phục vụ</div>
+        </div>
+
+    </div>
+
+    <div class="clock" id="clock">00:00:00</div>
+</div>
+
+<div class="queue-display">
+    <div class="main-container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <!-- Counter Section -->
+            <div class="counter-section">
+                <div class="counter-grid">
+                    @foreach (var items in ListCounter!.Take(@MaxVisibleCounters))
+                    {
+                        <div class="counter-box">
+                            <div class="counter-name">@items.Name</div>
+
+                            <div class="current-number">@items.Code@items.CurrentNumber.ToString("D3")</div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+
+            <!-- Video Section -->
+            @* <div class="video-section">
+            @if (urlVideo != null)
+            {
+            <video id="myVideo" autoplay loop muted onclick="toggleVideoMute()">
+            <source src="@urlVideo" type="video/mp4">
+            Your browser does not support the video tag.
+            </video>
+            }
+            <div class="video-controls">
+            <i class="fas fa-volume-mute"></i> Click to unmute
+            </div>
+            </div> *@
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+
+                @* <h4 class="card-title">
+                <i class="fas fa-users"></i> DANH SÁCH KHÁCH HÀNG CHỜ
+                </h4>
+                <div class="waiting-list-container">
+
+                <!-- Khách hàng tiếp theo -->
+                @if (DisplayedWaitingClients != null)
+                {
+
+                foreach (var item in DisplayedWaitingClients)
+                {
+                <div class="waiting-item @(item == null ? "empty" : "")">
+                <div class="item-avatar">
+                <i class="fas fa-user"></i>
+                </div>
+                <div class="item-info">
+                @if (item != null)
+                {
+                <div class="item-vehicle">Khách Hàng</div>
+
+                ///HIỂN THỊ THÔNG TIN NHƯ BIỂN SỐ XE, TÊN KHÁCH HÀNG Ở ĐÂY
+                }
+                else
+                {
+                <span class="item-vehicle">Trống</span>
+                }
+                </div>
+                <div class="item-number">
+                @if (item != null)
+                {
+                @item.DescriptionQueueItem@item.OrderNumber.ToString("D3")
+                }
+                else
+                {
+                <span>---</span>
+                }
+                </div>
+                </div>
+                }
+                }
+
+                </div> *@
+                <div class="card">
+                    <h4 class="card-title">
+                        <i class="fas fa-users"></i> DANH SÁCH KHÁCH HÀNG
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ĐANG CHỜ</th>
+                                    <th>BỎ LỠ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < DisplayCount; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(i < DisplayedWaitingClients.Count && DisplayedWaitingClients[i] != null
+                                                ? $"{DisplayedWaitingClients[i].DescriptionService}{DisplayedWaitingClients[i].OrderNumber:D3}"
+                                                : "--")
+                                        </td>
+                                        <td>
+                                            @(i < DisplayedMissedClients.Count && DisplayedMissedClients[i] != null
+                                                ? $"{DisplayedMissedClients[i].DescriptionService}{DisplayedMissedClients[i].OrderNumber:D3}"
+                                                : "--")
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+
+                        </table>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+</div>
+<!-- Footer with Auto Sliding Text -->
+
+<footer class="footer">
+    <div class="container-fluid">
+        <div>
+            <marquee style="color:@footerTextColor;font-size:@($"{footerFontSize}px")" behavior="scroll" direction="left" scrollamount="8">@footerText</marquee>
+        </div>
+    </div>
+</footer>
+<script>
+    // Cứ 5 phút sẽ refresh lại trang
+    setInterval(function () {
+        location.reload();
+    }, 300000); // 5 phút = 300.000 ms
+
+    // Clock functionality
+    function updateClock() {
+        var now = new Date();
+        var hours = String(now.getHours()).padStart(2, '0');
+        var minutes = String(now.getMinutes()).padStart(2, '0');
+        var seconds = String(now.getSeconds()).padStart(2, '0');
+        var timeString = hours + ':' + minutes + ':' + seconds;
+        document.getElementById('clock').textContent = timeString;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Video controls
+    function toggleVideoMute() {
+        const video = document.getElementById('myVideo');
+        const controls = document.querySelector('.video-controls');
+
+        if (video) {
+            video.muted = !video.muted;
+            controls.innerHTML = video.muted ?
+                '<i class="fas fa-volume-mute"></i> Click to unmute' :
+                '<i class="fas fa-volume-up"></i> Click to mute';
+        }
+    }
+    // Responsive adjustments
+    function adjustForScreenSize() {
+        const screenWidth = window.innerWidth;
+        const video = document.getElementById('myVideo');
+
+        if (screenWidth > 1920) {
+            // TV optimization
+            document.body.style.fontSize = '18px';
+        } else if (screenWidth < 768) {
+            // Mobile optimization
+            document.body.style.fontSize = '14px';
+        }
+    }
+
+    window.addEventListener('resize', adjustForScreenSize);
+    adjustForScreenSize();
+</script>

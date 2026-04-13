@@ -1,0 +1,22 @@
+﻿@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public List<int> Data { get; set; }
+    [Parameter] public List<string> Labels { get; set; }
+    [Parameter] public string ChartColor { get; set; }
+}
+
+<div class="chart-container">
+    <h5>@Title</h5>
+    <canvas id="chartCanvas"></canvas>
+</div>
+
+@* JavaScript để render biểu đồ *@
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("renderChart", "chartCanvas", Data, Labels, ChartColor);
+        }
+    }
+}

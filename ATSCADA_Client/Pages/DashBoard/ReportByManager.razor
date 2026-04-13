@@ -1,0 +1,96 @@
+﻿@page "/report/{ServiceId}"
+@using ATSCADA_Library.Entities
+@inject IZnsConfigApiClient ZnsConfigApiClient
+@inject IQueueHistoryApiClient QueueHistoryApiClient
+<div class="container mt-5">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-4">
+            <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("en-US"))" @bind-StartDate="StartDate" @bind-EndDate="EndDate">
+                <PickerTemplate>
+                    <div id="@context.Id" @onclick="context.Toggle"
+                         style="background: #cacaca; cursor: pointer; padding: 10px 15px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <i class="oi oi-calendar" style="color: #007bff;"></i>&nbsp;
+                        <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? @DatetimeToday : "")</span>
+                        <i class="oi oi-chevron-bottom float-right"></i>
+                    </div>
+                </PickerTemplate>
+            </DateRangePicker>
+        </div>
+
+        <div class="col-md-8 d-flex justify-content-start" style="gap: 10px;">
+            <button class="btn btn-info" style="min-width: 120px;" @onclick="() => GetAllQueueHistories()">Report</button>
+
+            
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="entries" class="form-label">Show</label>
+            <PageSizeSelector PageSizeChanged="OnPageSizeChanged" />
+            <span class="ms-1">entries</span>
+        </div>
+        <div class="col-md-3">
+            <InputSelect @bind-Value="SearchBy" id="numberSelect" class="form-control">
+                <option value="">--Select--</option>
+                <option value="FullName">Full Name</option>
+                <option value="PhoneNumber">Phone Number</option>
+                <option value="Status">Status</option>
+                <option value="PrintTime">Print Time</option>
+            </InputSelect>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group">
+                <input @oninput="e => OnSearch(e, SearchBy)" type="text" class="form-control" placeholder="Search" aria-label="Search">
+                <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr class="tr-hover">
+                    <th><input type="checkbox" @onchange="SelectAllCustomers" /></th>
+                    <th @onclick="() => SortByColumn(nameof(QueueHistory.FullName))">
+                        Họ tên
+
+                    </th>
+                    <th @onclick="() => SortByColumn(nameof(QueueHistory.PhoneNumber))">
+                        Số điện thoại
+
+                    </th>
+                    <th @onclick="() => SortByColumn(nameof(QueueHistory.DescriptionService))">
+                        Tên dịch vụ
+                    </th>
+                    <th @onclick="() => SortByColumn(nameof(QueueHistory.Status))">
+                        Trạng thái
+
+                    </th>
+                    <th @onclick="() => SortByColumn(nameof(QueueHistory.PrintTime))">
+                        Thời gian đăng ký
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in listQueueHistories!)
+                {
+                    <tr>
+                        <td><input type="checkbox" @bind="item.IsSelected" /></td>
+                        <td>@item.FullName</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.DescriptionService</td>
+                        <td>@item.Status</td>
+                        <td>@item.PrintTime.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div style="float:right" class="d-flex justify-content-between align-items-center mt-3">
+        <Pagination MetaData="MetaData" Spread="2" SelectedPage="SelectedPage"></Pagination>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿/* Định dạng vùng chọn ngày */
+.date-picker-container {
+    background: #cacaca;
+    cursor: pointer;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+/* Định dạng nút */
+.btn-action {
+    min-width: 120px;
+    padding: 10px 15px;
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Tính responsive */
+@media (max-width: 768px) {
+    .btn-action {
+        flex: 1 1 calc(50% - 10px); /* Chia nút thành 2 cột trên màn hình nhỏ */
+    }
+
+    .col-md-8 {
+        gap: 10px; /* Khoảng cách giữa các nút */
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-action {
+        flex: 1 1 100%; /* Chia nút thành hàng đơn trên màn hình cực nhỏ */
+    }
+}

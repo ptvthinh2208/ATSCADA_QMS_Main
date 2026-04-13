@@ -1,0 +1,183 @@
+﻿# =========================
+
+# Build results
+
+# =========================
+
+bin/
+obj/
+out/
+publish/
+wwwroot/dist/
+wwwroot/build/
+
+# =========================
+
+# Visual Studio
+
+# =========================
+
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# =========================
+
+# Rider / JetBrains
+
+# =========================
+
+.idea/
+*.sln.iml
+
+# =========================
+
+# VS Code
+
+# =========================
+
+.vscode/
+
+# =========================
+
+# Logs
+
+# =========================
+
+*.log
+logs/
+
+# =========================
+
+# OS files
+
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# ASP.NET Core
+
+# =========================
+
+appsettings.Development.json
+appsettings.*.json
+
+# (OPTIONAL: nếu không muốn push config nhạy cảm)
+
+# appsettings.json
+
+# =========================
+
+# Entity Framework
+
+# =========================
+
+Migrations/
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# =========================
+
+# NuGet
+
+# =========================
+
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# =========================
+
+# Blazor WebAssembly
+
+# =========================
+
+**/wwwroot/_framework/
+**/wwwroot/service-worker-assets.js
+**/wwwroot/service-worker.published.js
+
+# =========================
+
+# Node (nếu có frontend hoặc tooling)
+
+# =========================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+pnpm-lock.yaml
+
+# =========================
+
+# Testing
+
+# =========================
+
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# =========================
+
+# Docker
+
+# =========================
+
+docker-compose.override.yml
+
+# =========================
+
+# Publish profiles
+
+# =========================
+
+Properties/PublishProfiles/
+
+# =========================
+
+# Temporary files
+
+# =========================
+
+*.tmp
+*.temp
+*.cache
+*.pid
+*.seed
+*.rar
+
+# =========================
+
+# Resharper
+
+# =========================
+
+_ReSharper*/
+*.DotSettings.user
+
+# =========================
+
+# Others
+
+# =========================
+
+*.bak
+*.swp
+*.swo
+*~
+/ATSCADA_API/Properties/PublishProfiles/FolderProfile75.pubxml
+*.pubxml

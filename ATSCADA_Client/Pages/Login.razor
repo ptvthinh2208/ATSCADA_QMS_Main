@@ -1,0 +1,146 @@
+﻿@layout AppointmentLayout
+@page "/login"
+
+@using System.IdentityModel.Tokens.Jwt
+@using ATSCADA_Client.Services.Authenticate
+@using ATSCADA_Library.DTOs
+@using Blazored.LocalStorage
+@inject ILocalStorageService localStorage
+
+
+
+<div class="login-container">
+    @* <div class="left-panel">
+        
+    </div> *@
+    <div class="right-panel">
+        <div class="text-center">
+            <img src="img/logo-remove-bg.png" alt="Logo" class="logo">
+        </div>
+        <h4 class="text-center">Sign In</h4>
+        <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <ValidationSummary></ValidationSummary>
+            
+
+            <div class="form-group">
+                <InputText id="username" placeholder="Enter a valid username" class="form-control" @bind-Value="LoginModel.Email"></InputText>
+                <ValidationMessage For="()=> LoginModel.Email"></ValidationMessage>
+            </div>
+            <div class="form-group">
+                <InputText id="password" placeholder="Enter password" type="password" class="form-control" @bind-Value="LoginModel.Password"></InputText>
+                <ValidationMessage For="()=> LoginModel.Password"></ValidationMessage>
+            </div>
+
+            <button type="submit" class="btn btn-custom btn-block">Sign in</button>
+        </EditForm>
+      
+        <small class="forgot-password ml-4 ml-sm-5 mb-2">
+
+            Copyright © 2024
+            <a href="https://www.atscada.com" target="_blank" class="text-decoration-none fw-bold">
+                atscada.com
+            </a>
+
+        </small>
+    </div>
+</div>
+
+@* <div class=" px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
+    <div class="card card0 border-0">
+        <div class="row d-flex">
+            <div class="col-lg-6">
+                <div class="card1 pb-5">
+                    <div class="row">
+                        <img src="img/logo-remove-bg.png" class="logo">
+                    </div>
+                    <div class="row px-3 justify-content-center mt-4 mb-5 border-line">
+                        <img src="img/acc_img1.webp" class="image">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+
+                <div class="card2 card border-0 px-4 py-5">
+                    <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
+                        <DataAnnotationsValidator></DataAnnotationsValidator>
+                        <ValidationSummary></ValidationSummary>
+                        <div class="row px-3 mb-4">
+                            <div class="line"></div>
+                            <small class="or text-center">LOGIN</small>
+                            <div class="line"></div>
+                        </div>
+
+                        <div class="row px-3">
+                            <label class="mb-1"><h6 class="mb-0 text-sm">User Name</h6></label>
+                            <InputText id="username" placeholder="Enter a valid username" class="mb-4 form-control form-control-lg" @bind-Value="LoginModel.Email"></InputText>
+                            <ValidationMessage For="()=> LoginModel.Email"></ValidationMessage>
+                        </div>
+                        <div class="row px-3">
+                            <label class="mb-1"><h6 class="mb-0 text-sm">Password</h6></label>
+                            <InputText id="password" placeholder="Enter password" type="password" class="mb-4 form-control form-control-lg" @bind-Value="LoginModel.Password"></InputText>
+                            <ValidationMessage For="()=> LoginModel.Password"></ValidationMessage>
+                        </div>
+
+                        <div style="float:right" class="row mb-3 px-3">
+                            <button type="submit" class="btn btn-blue text-center">Login</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+        <div class="bg-blue py-4">
+            <div class="row px-3">
+                <small class="ml-4 ml-sm-5 mb-2">
+                    Copyright © 2024
+                    <a href="https://www.atscada.com" target="_blank" class="text-decoration-none text-white fw-bold">
+                        atscada.com
+                    </a>
+                </small>
+
+            </div>
+        </div>
+    </div>
+</div>
+ *@
+
+@code {
+
+    private LoginRequest LoginModel = new LoginRequest();
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     var token = await localStorage.GetItemAsync<string>("authToken");
+
+    //     if (!string.IsNullOrEmpty(token))
+    //     {
+    //         var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+    //         // Kiểm tra token có hợp lệ hay không (chưa hết hạn)
+    //         if (jwtToken != null && jwtToken.ValidTo > DateTime.Now)
+    //         {
+    //             NavigationManager.NavigateTo("./");
+    //         }
+    //     }
+    // }
+    private async Task HandleLogin()
+    {
+        var result = await AuthService.Login(LoginModel);
+        if (result.Successful)
+        {
+            await localStorage.SetItemAsync("authToken", result.Token);
+
+            if (result.RoleUser == 1) // Admin
+            {
+                NavigationManager.NavigateTo("./");
+            }
+            else
+            {
+                NavigationManager.NavigateTo($"report/{result.CounterId}");
+            }
+        }
+        else
+        {
+            ToastService.ShowError(result.Message!);
+        }
+    }
+}
